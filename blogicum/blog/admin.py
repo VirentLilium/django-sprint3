@@ -22,7 +22,7 @@ class CategoryAdmin(admin.ModelAdmin):
         PostInline,
     ]
     list_display = (
-        'title',
+        'title', 'is_published'
     )
 
 
@@ -53,8 +53,6 @@ class PostAdmin(admin.ModelAdmin):
 
     list_filter = ('is_published', 'category', 'location',
                    'pub_date', 'author')
-
-    ordering = ('-pub_date',)
 
     fields = ('title', 'text', 'author', 'category',
               'location', 'is_published', 'pub_date')

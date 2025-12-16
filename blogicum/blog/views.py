@@ -1,7 +1,24 @@
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 
+from .constants import POSTS_ON_MAIN_PAGE
 from .models import Category, Post
+
+
+def get_post_objects():
+    """
+    Возвращает QuerySet постов с join по заданным полям и фильтрацией.
+
+    - поля для select_related: 'author', 'location', 'category'.
+    - фильтры: дата не позднее текущего времени, пост опубликован.
+    """
+    query_set = (Post.objects
+                 .select_related('author', 'location', 'category')
+                 .filter(pub_date__lte=timezone.now(),
+                         is_published=True)
+                 )
+
+    return query_set
 
 
 def index(request):
@@ -16,15 +33,9 @@ def index(request):
     Шаблон:
         blog/index.html
     """
-    post_list = (
-        Post.objects
-        .select_related('author', 'location', 'category')
-        .filter(
-            pub_date__lte=timezone.now(),
-            is_published=True,
-            category__is_published=True)
-        .order_by('-pub_date')[:5]
-    )
+    post_list = (get_post_objects()
+                 .filter(category__is_published=True)[:POSTS_ON_MAIN_PAGE]
+                 )
 
     context = {'post_list': post_list}
     return render(request, 'blog/index.html', context)
@@ -32,7 +43,7 @@ def index(request):
 
 def post_detail(request, post_id):
     """
-    Отображает страницу поста в соответствии с идентификатором.
+    Отображает страницу поста в соответствии с его идентификатором.
 
     Публикация отображается, если:
     - дата публикации не позже текущего времени,
@@ -44,12 +55,10 @@ def post_detail(request, post_id):
     Шаблон:
         blog/detail.html
     """
-    post = get_object_or_404(
-        Post.objects.select_related('author', 'location', 'category'),
-        pk=post_id,
-        pub_date__lte=timezone.now(),
-        is_published=True,
-        category__is_published=True
+    post = (get_object_or_404(
+        get_post_objects()
+        .filter(category__is_published=True),
+        pk=post_id)
     )
 
     context = {'post': post}
@@ -65,26 +74,18 @@ def category_posts(request, category_slug):
     - опубликованы,
     - дата публикации — не позже текущего времени.
 
-    Если категория не опубликована возвращает ошибку 404.
+    Если категория не опубликована, возвращает ошибку 404.
 
     Шаблон:
         blog/category.html
     """
-    category = get_object_or_404(
+    category = (get_object_or_404(
         Category,
         slug=category_slug,
-        is_published=True
+        is_published=True)
     )
 
-    post_list = (
-        Post.objects
-        .select_related('author', 'location', 'category')
-        .filter(
-            pub_date__lte=timezone.now(),
-            is_published=True,
-            category=category)
-        .order_by('-pub_date')
-    )
+    post_list = get_post_objects().filter(category=category)
 
     context = {'category': category, 'post_list': post_list}
     return render(request, 'blog/category.html', context)

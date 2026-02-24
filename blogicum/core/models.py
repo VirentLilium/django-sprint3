@@ -5,7 +5,7 @@ class CreatedAtModel(models.Model):
     """
     Абстрактная модель с датой создания записи.
 
-    pub_date (datetime): Дата и время публикации.
+    created_at (datetime): Дата и время создания записи.
     """
 
     created_at = models.DateTimeField(

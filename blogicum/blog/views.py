@@ -10,12 +10,14 @@ def get_post_objects():
     Возвращает QuerySet постов с join по заданным полям и фильтрацией.
 
     - поля для select_related: 'author', 'location', 'category'.
-    - фильтры: дата не позднее текущего времени, пост опубликован.
+    - фильтры: дата не позднее текущего времени, пост и категория опубликованы.
     """
     query_set = (Post.objects
                  .select_related('author', 'location', 'category')
                  .filter(pub_date__lte=timezone.now(),
-                         is_published=True)
+                         is_published=True,
+                         category__is_published=True
+                         )
                  )
 
     return query_set
@@ -33,9 +35,7 @@ def index(request):
     Шаблон:
         blog/index.html
     """
-    post_list = (get_post_objects()
-                 .filter(category__is_published=True)[:POSTS_ON_MAIN_PAGE]
-                 )
+    post_list = get_post_objects()[:POSTS_ON_MAIN_PAGE]
 
     context = {'post_list': post_list}
     return render(request, 'blog/index.html', context)
@@ -55,10 +55,9 @@ def post_detail(request, post_id):
     Шаблон:
         blog/detail.html
     """
-    post = (get_object_or_404(
-        get_post_objects()
-        .filter(category__is_published=True),
-        pk=post_id)
+    post = get_object_or_404(
+        get_post_objects(),
+        pk=post_id
     )
 
     context = {'post': post}

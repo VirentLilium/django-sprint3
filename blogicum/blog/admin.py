@@ -1,6 +1,8 @@
+"""Настройки админ-зоны приложения blog."""
+
 from django.contrib import admin
 
-from .models import Category, Location, Post
+from blog.models import Category, Location, Post
 
 
 admin.site.empty_value_display = 'Не задано'
@@ -28,7 +30,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    """Администрирование публикаций блога."""
+    """Настройки отображения публикаций."""
 
     list_display = (
         'title',
@@ -57,10 +59,12 @@ class PostAdmin(admin.ModelAdmin):
     fields = ('title', 'text', 'author', 'category',
               'location', 'is_published', 'pub_date')
 
+    list_select_related = ('author', 'category', 'location')
+
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
-    """Администрирование локаций."""
+    """Настройки отображения локаций."""
 
     readonly_fields = ('created_at',)
     list_display = ('name', 'is_published', 'created_at')

@@ -1,3 +1,5 @@
+"""Модели приложения blog."""
+
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -8,20 +10,15 @@ User = get_user_model()
 
 
 class Category(PublishedModel):
-    """
-    Модель категории.
+    """Модель категории публикаций."""
 
-    Атрибуты:
-        title (str): Заголовок категории.
-        description (str): Описание категории.
-        slug (slug): Слаг категории.
-        is_published (bool): Флаг категории, True - опубликовано.
-        created_at (datetime): Дата и время добавления записи в базу.
-    """
-
-    title = models.CharField(max_length=256,
-                             verbose_name='Заголовок')
-    description = models.TextField(verbose_name='Описание')
+    title = models.CharField(
+        max_length=256,
+        verbose_name='Заголовок',
+    )
+    description = models.TextField(
+        verbose_name='Описание',
+    )
     slug = models.SlugField(
         unique=True,
         verbose_name='Идентификатор',
@@ -33,60 +30,56 @@ class Category(PublishedModel):
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
-    def __str__(self):
-        """Возвращает название категории."""
+    def __str__(self) -> str:
+        """
+        Возвращает название объекта категории.
+
+        :return: Строковое представление объекта.
+        """
         return self.title
 
 
 class Location(CreatedAtModel):
-    """
-    Модель локации.
+    """Модель местоположения публикации."""
 
-    Атрибуты:
-        name (str): Название локации.
-        is_published (bool): Флаг локации, True - опубликовано.
-        created_at (datetime): Дата и время добавления записи в базу.
-    """
-
-    name = models.CharField(max_length=256, verbose_name='Название места')
+    name = models.CharField(
+        max_length=256,
+        verbose_name='Название места',
+    )
     is_published = models.BooleanField(
         default=True,
-        verbose_name='Опубликовано')
+        verbose_name='Опубликовано',
+    )
 
     class Meta:
         verbose_name = 'местоположение'
         verbose_name_plural = 'Местоположения'
 
-    def __str__(self):
-        """Возвращает название локации."""
+    def __str__(self) -> str:
+        """
+        Возвращает название объекта локации.
+
+        :return: Строковое представление объекта.
+        """
         return self.name
 
 
 class Post(PublishedModel):
-    """
-    Модель публикации (пост) для блога.
+    """Модель публикации блога."""
 
-    Атрибуты:
-        title (str): Заголовок поста.
-        text (str): Основной текст публикации.
-        pub_date (datetime): Дата и время публикации.
-        created_at (datetime): Дата и время добавления записи в базу.
-        is_published (bool): Флаг публикации, True - опубликовано.
-        author (User): Пользователь, создавший пост.
-        location (Location | None): Местоположение, может быть пустым.
-        category (Category): Категория поста, обязательна.
-    """
+    title = models.CharField(
+        max_length=256,
+        verbose_name='Заголовок',
+    )
 
-    title = models.CharField(max_length=256,
-                             verbose_name='Заголовок')
-
-    text = models.TextField(verbose_name='Текст')
+    text = models.TextField(
+        verbose_name='Текст',
+    )
 
     pub_date = models.DateTimeField(
         verbose_name='Дата и время публикации',
         help_text=('Если установить дату и время в будущем — '
                    'можно делать отложенные публикации.')
-
     )
 
     author = models.ForeignKey(
@@ -116,6 +109,10 @@ class Post(PublishedModel):
         default_related_name = 'posts'
         ordering = ('-pub_date',)
 
-    def __str__(self):
-        """Возвращает заголовок публикации."""
+    def __str__(self) -> str:
+        """
+        Возвращает название объекта поста.
+
+        :return: Строковое представление объекта.
+        """
         return self.title

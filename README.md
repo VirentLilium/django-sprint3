@@ -1,4 +1,4 @@
-# Blogicum# 📝 Blogicum
+# 📝 Blogicum
 
 Blogicum — учебная блог-платформа на Django.
 
@@ -6,7 +6,7 @@ Blogicum — учебная блог-платформа на Django.
 
 ---
 
-# 🎯 Цель проекта
+# Цель проекта
 
 Основная задача заключалась в переходе от хранения данных в Python-структурах к полноценной работе с базой данных через Django ORM.
 
@@ -92,19 +92,54 @@ Blogicum — учебная блог-платформа на Django.
 
 ```text
 django-sprint3/
-├── blogicum/
-│   ├── manage.py
-│   ├── blogicum/
-│   ├── blog/
-│   ├── pages/
-│   ├── templates/
-│   └── static/
-├── tests/
 ├── .flake8
 ├── .gitignore
-├── requirements.txt
+├── LICENSE
+├── README.md
 ├── pytest.ini
-└── README.md
+├── requirements.txt
+├── blogicum/
+│   ├── manage.py
+│   ├── blog/
+│   │   ├── __init__.py
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── constants.py
+│   │   ├── models.py
+│   │   ├── urls.py
+│   │   ├── views.py
+│   │   └── migrations/
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── apps.py
+│   │   ├── models.py
+│   │   └── migrations/
+│   ├── pages/
+│   │   ├── __init__.py
+│   │   ├── apps.py
+│   │   └── urls.py
+│   ├── blogicum/
+│   │   ├── __init__.py
+│   │   ├── asgi.py
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   └── wsgi.py
+│   │
+│   └── templates/
+│       ├── base.html
+│       ├── blog/
+│       │   ├── category.html
+│       │   ├── detail.html
+│       │   └── index.html
+│       ├── includes/
+│       │   ├── category_link.html
+│       │   ├── footer.html
+│       │   ├── header.html
+│       │   └── post_card.html
+│       └── pages/
+│           ├── about.html
+│           └── rules.html
+└── tests/
 ```
 
 ---
@@ -152,7 +187,7 @@ pip install -r requirements.txt
 
 ---
 
-# 🚀 Запуск проекта
+# Запуск проекта
 
 Перейдите в директорию Django-проекта:
 
@@ -186,7 +221,7 @@ http://127.0.0.1:8000/
 
 ---
 
-# 🧪 Запуск тестов
+# Запуск тестов
 
 Из корневой директории проекта выполните:
 
